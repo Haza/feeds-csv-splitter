@@ -39,4 +39,4 @@ for i in $(echo "$PREFIX*[0-9].$EXTENSION"); do
     mv $TEMP_FILE $i
 done
 
-printf '%s: created files %s00.%s to %s%02d.%s each with %d lines.\n' $SCRIPTNAME $PREFIX $EXTENSION $PREFIX $((NBR_OF_FILES - 1)) $EXTENSION $NBR_OF_LINES
+printf '%s: created %d files: %s00.%s to %s%02d.%s each with %d lines.\n' $SCRIPTNAME $NBR_OF_FILES $PREFIX $EXTENSION $PREFIX $((NBR_OF_FILES - 1)) $EXTENSION $NBR_OF_LINES
