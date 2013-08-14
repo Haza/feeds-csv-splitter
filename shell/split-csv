@@ -9,7 +9,7 @@ function print_usage() {
 }
 
 ## Check the number of arguments.
-if [ $# -neq 2 ]; then
+if [ $# -ne 2 ]; then
     print_usage
     exit 1
 fi
@@ -21,6 +21,7 @@ HEADER=$(sed -n '1p' $INPUT_FILE)
 ## The split command.
 SPLIT=$(command -v split || exit 0)
 
+## Prefix and extension.
 PREFIX=${INPUT_FILE%%.csv}
 EXTENSION=${INPUT_FILE##*.}
 
@@ -37,3 +38,5 @@ for i in $(echo "$PREFIX*[0-9].$EXTENSION"); do
     cat $i >> $TEMP_FILE
     mv $TEMP_FILE $i
 done
+
+printf '%s: created files %s00.%s to %s%02d.%s each with %d lines.\n' $SCRIPTNAME $PREFIX $EXTENSION $PREFIX $((NBR_OF_FILES - 1)) $EXTENSION $NBR_OF_LINES
