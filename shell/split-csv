@@ -1,0 +1,39 @@
+#!/bin/bash
+
+### Splits a CSV file given the number of lines each flle should have.
+
+SCRIPTNAME=${0##*/}
+
+function print_usage() {
+    echo "Usage: $SCRIPTNAME <file.csv> <nbr of lines per file>"
+}
+
+## Check the number of arguments.
+if [ $# -neq 2 ]; then
+    print_usage
+    exit 1
+fi
+
+## Get the header line.
+INPUT_FILE=$1
+HEADER=$(sed -n '1p' $INPUT_FILE)
+
+## The split command.
+SPLIT=$(command -v split || exit 0)
+
+PREFIX=${INPUT_FILE%%.csv}
+EXTENSION=${INPUT_FILE##*.}
+
+## Split the files according to the given number of lines.
+NBR_OF_LINES=$2
+$SPLIT -d -l $((NBR_OF_LINES - 1)) --additional-suffix=".$EXTENSION" $INPUT_FILE $PREFIX
+
+NBR_OF_FILES=$(ls -1 *[0-9].csv | grep $PREFIX | wc -l)
+
+## Looping over the CSV files that resulted from the split.
+for i in $(echo "$PREFIX*[0-9].$EXTENSION"); do
+    TEMP_FILE=$$_$i
+    echo $HEADER > $TEMP_FILE
+    cat $i >> $TEMP_FILE
+    mv $TEMP_FILE $i
+done
